@@ -507,3 +507,32 @@ function make_claim_list_sortable( $columns )
 	);
 	return $columns;
 }
+
+
+// Validate PolicyID for Post Types - Claim
+add_action('save_post', 'validate_policyID', 10000, 2); 
+function validate_policyID($post_id, $post) {
+
+	if ($post->post_type != 'claim') return;
+
+	$post_type = 'policy';
+	$meta_key = 'policy_id';
+   
+	// look up the current policy_id for this claim post
+	$policy_id = get_post_meta($post_id, $meta_key, true);
+  
+	global $wpdb;
+	$query = 'select a.id from '.$wpdb->posts.' a inner join '.$wpdb->postmeta.' b on a.id = b.post_id where a.post_type = "'.$post_type.'" and b.meta_key = "'.$meta_key.'" and b.meta_value = "'.$policy_id.'" and a.id != '.$post_id.' limit 1';
+   	$q = $wpdb->prepare($query);
+	$exists = $wpdb->get_var($q);
+  
+	//If policy_id does not exists then set it to zero and notify user
+	if (!$exists){
+			  update_post_meta($post_id, $meta_key, '0');
+			  # Add a notification
+			  update_option('my_notifications', json_encode(array('error', 'Invalid Policy ID - '.$mls_id)));
+			  # And redirect
+			  header('Location: '.get_edit_post_link($post_id, 'redirect'));
+			  exit;
+	}
+  }
