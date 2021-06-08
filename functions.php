@@ -631,7 +631,7 @@ function disable_autosave() {
 //REST API for Policy
 add_action( 'rest_api_init', 'create_rest_api_policies' );   
 
-function custom_api_get_all_posts() {
+function create_rest_api_policies() {
     register_rest_route( 'v2', '/policies', array(
         'methods' => 'GET',
         'callback' => 'rest_pi_get_all_policies_callback'
