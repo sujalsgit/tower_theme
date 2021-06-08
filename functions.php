@@ -353,3 +353,157 @@ if( function_exists('acf_add_local_field_group') ):
 	));
 	
 endif;
+
+
+//Listing Page - Columns for Custom Post Type - Policy
+add_filter( 'manage_edit-policy_columns', 'policy_columns' ) ;
+
+function policy_columns( $columns ) {
+	$columns = array(
+		'cb' => '<input type="checkbox" />',
+		'policy_name' => __( 'Policy Name' ),
+		'policy_id' => __( 'Policy ID' ),
+		'live_date' => __( 'Live Date' )
+	);
+	return $columns;
+}
+
+add_action( 'manage_policy_posts_custom_column', 'render_policy_list', 10, 2 );
+
+function render_policy_list( $column, $post_id ) {
+	global $post;
+
+	switch( $column ) {
+		case 'policy_name' :
+
+			/* Get the post meta. */
+			$policy_name = get_field('policy_name');
+
+			/* If no policy_name is found, output a default message. */
+			if ( empty( $policy_name ) )
+				echo __( '-' );
+			else
+				echo '<a href="' . get_edit_post_link($post) . '">' .$policy_name. '</a>';
+			break;
+
+		case 'policy_id' :
+
+  			/* Get the post meta. */
+			$policy_id = get_field('policy_id');
+
+  			/* If no policy_id is found, output a default message. */
+  			if ( empty( $policy_id ) )
+  				echo __( '-' );
+  			else
+  				printf( __( '%s' ), $policy_id );
+  			break;
+
+		case 'live_date' :
+
+  			/* Get the post meta. */
+			$live_date = get_field('live_date');
+
+  			/* If no live_date is found, output a default message. */
+  			if ( empty( $live_date ) )
+  				echo __( '-' );
+  			else
+  				printf( __( '%s' ), $live_date );
+
+  			break;
+
+		/* Just break out of the switch statement for everything else. */
+		default :
+			break;
+	}
+}
+
+add_filter("manage_edit-policy_sortable_columns", "make_policy_list_sortable" );
+
+function make_policy_list_sortable( $columns )
+{
+  $columns = array(
+		'policy_name' => __( 'Policy Name' ),
+		'policy_id' => __( 'Policy ID' ),
+		'live_date' => __( 'Live Date' )
+	);
+	return $columns;
+}
+
+
+//Listing Page - Columns for Custom Post Type - Claim
+add_filter( 'manage_edit-claim_columns', 'claim_columns' ) ;
+
+function claim_columns( $columns ) {
+
+	$columns = array(
+		'cb' => '<input type="checkbox" />',
+		'name' => __( 'Name' ),
+		'policy_id' => __( 'Policy ID' ),
+		'email' => __( 'Email' )
+	);
+
+	return $columns;
+}
+
+add_action( 'manage_claim_posts_custom_column', 'render_claim_list', 10, 2 );
+
+function render_claim_list( $column, $post_id ) {
+	global $post;
+
+	switch( $column ) {
+
+		case 'policy_id' :
+
+  			/* Get the post meta. */
+			$policy_id = get_field('policy_id');
+
+  			/* If no policy_id is found, output a default message. */
+  			if ( empty( $policy_id ) )
+  				echo __( '-' );
+  			else
+  				printf( __( '%s' ), $policy_id );
+
+  			break;
+		case 'name' :
+
+			/* Get the post meta. */
+			$name = get_field('name');
+
+			/* If no name is found, output a default message. */
+			if ( empty( $name ) )
+				echo __( '-' );
+			else
+				echo '<a href="' . get_edit_post_link($post) . '">' .$name. '</a>';
+
+			break;
+
+		case 'email' :
+
+  			/* Get the post meta. */
+			$email = get_field('email');
+
+  			/* If no email is found, output a default message. */
+  			if ( empty( $email ) )
+  				echo __( '-' );
+  			else
+  				printf( __( '%s' ), $email );
+
+  			break;
+
+		/* Just break out of the switch statement for everything else. */
+		default :
+			break;
+	}
+}
+
+add_filter("manage_edit-claim_sortable_columns", "make_claim_list_sortable" );
+
+function make_claim_list_sortable( $columns )
+{
+  $columns = array(
+		'policy_id' => __( 'Policy ID' ),
+		'name' => __( 'Name' ),
+		'email' => __( 'Email' )
+	);
+	return $columns;
+}
