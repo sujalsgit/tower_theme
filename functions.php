@@ -14,9 +14,7 @@ function tower_nav_init() {
 }
 add_action( 'init', 'tower_nav_init' );
 
-/**
- * Enqueue scripts and styles.
- */
+// Enqueue scripts and styles.
 function tower_scripts() {
 	wp_enqueue_style( 'tower-style', get_stylesheet_uri() );
 	wp_enqueue_style( 'tower-custom-style', get_template_directory_uri() . '/assets/css/style.css' );
@@ -24,6 +22,16 @@ function tower_scripts() {
 }
 add_action( 'wp_enqueue_scripts', 'tower_scripts' );
 
+// Incude Bootstrap Framework files
+function enqueue_bootstrap_scripts() {
+    wp_enqueue_script( 'bootstrap-js', '//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', array('jquery'), true);
+}
+add_action('wp_enqueue_scripts', 'enqueue_bootstrap_scripts');
+
+function enqueue_bootstrap_css() {
+    wp_enqueue_style( 'bootstrap', '//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' );
+}
+add_action('wp_enqueue_scripts', 'enqueue_bootstrap_css');
 
 // Register Custom Post Type For Insurance Policy
 function Create_PostType_Policy() {
