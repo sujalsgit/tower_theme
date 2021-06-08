@@ -90,7 +90,7 @@ function Create_PostType_Policy() {
 }
 add_action( 'init', 'Create_PostType_Policy', 0 );
 
-// Register Custom Post Type For Insurance Claims
+// Register Custom Post Type For Insurance Claim
 function Create_PostType_Claim() {
 
 	$labels = array(
@@ -154,3 +154,194 @@ function Create_PostType_Claim() {
 
 }
 add_action( 'init', 'Create_PostType_Claim', 0 );
+
+// Register Custom Fields for Custom Post Type - Policy
+if( function_exists('acf_add_local_field_group') ):
+
+	acf_add_local_field_group(array(
+		'key' => 'group_policydetails',
+		'title' => 'Policy Details',
+		'fields' => array(
+			array(
+				'key' => 'policy_name',
+				'label' => 'Policy Name',
+				'name' => 'policy_name',
+				'type' => 'text',
+				'instructions' => '',
+				'required' => 1,
+				'conditional_logic' => 0,
+				'wrapper' => array(
+					'width' => '',
+					'class' => '',
+					'id' => '',
+				),
+				'default_value' => '',
+				'placeholder' => '',
+				'prepend' => '',
+				'append' => '',
+				'maxlength' => '',
+			),
+			array(
+				'key' => 'policy_id',
+				'label' => 'Policy ID',
+				'name' => 'policy_id',
+				'type' => 'number',
+				'instructions' => '',
+				'required' => 1,
+				'conditional_logic' => 0,
+				'wrapper' => array(
+					'width' => '',
+					'class' => '',
+					'id' => '',
+				),
+				'default_value' => '',
+				'placeholder' => '',
+				'prepend' => '',
+				'append' => '',
+				'min' => '',
+				'max' => '',
+				'step' => '',
+			),
+			array(
+				'key' => 'live_date',
+				'label' => 'Live date',
+				'name' => 'live_date',
+				'type' => 'date_picker',
+				'instructions' => '',
+				'required' => 1,
+				'conditional_logic' => 0,
+				'wrapper' => array(
+					'width' => '',
+					'class' => '',
+					'id' => '',
+				),
+				'display_format' => 'd/m/Y',
+				'return_format' => 'd/m/Y',
+				'first_day' => 1,
+			),
+			array(
+				'key' => 'policy_description',
+				'label' => 'Description',
+				'name' => 'description',
+				'type' => 'textarea',
+				'instructions' => '',
+				'required' => 0,
+				'conditional_logic' => 0,
+				'wrapper' => array(
+					'width' => '',
+					'class' => '',
+					'id' => '',
+				),
+				'default_value' => '',
+				'placeholder' => '',
+				'maxlength' => '',
+				'rows' => '',
+				'new_lines' => '',
+			),
+		),
+		'location' => array(
+			array(
+				array(
+					'param' => 'post_type',
+					'operator' => '==',
+					'value' => 'policy',
+				),
+			),
+		),
+		'menu_order' => 0,
+		'position' => 'normal',
+		'style' => 'default',
+		'label_placement' => 'top',
+		'instruction_placement' => 'label',
+		'hide_on_screen' => '',
+		'active' => true,
+		'description' => '',
+	));
+endif;
+
+// Register Custom Fields for Custom Post Type - Claim
+if( function_exists('acf_add_local_field_group') ):
+	
+	acf_add_local_field_group(array(
+		'key' => 'policy_claimdetails',
+		'title' => 'Policy Claim Detail',
+		'fields' => array(
+			array(
+				'key' => 'policy_id',
+				'label' => 'Policy ID',
+				'name' => 'policy_id',
+				'type' => 'number',
+				'instructions' => '',
+				'required' => 1,
+				'conditional_logic' => 0,
+				'wrapper' => array(
+					'width' => '',
+					'class' => '',
+					'id' => '',
+				),
+				'default_value' => '',
+				'placeholder' => '',
+				'prepend' => '',
+				'append' => '',
+				'min' => '',
+				'max' => '',
+				'step' => '',
+			),
+			array(
+				'key' => 'claim_name',
+				'label' => 'Name',
+				'name' => 'name',
+				'type' => 'text',
+				'instructions' => '',
+				'required' => 1,
+				'conditional_logic' => 0,
+				'wrapper' => array(
+					'width' => '',
+					'class' => '',
+					'id' => '',
+				),
+				'default_value' => '',
+				'placeholder' => '',
+				'prepend' => '',
+				'append' => '',
+				'maxlength' => '',
+			),
+			array(
+				'key' => 'claim_email',
+				'label' => 'Email',
+				'name' => 'email',
+				'type' => 'email',
+				'instructions' => '',
+				'required' => 1,
+				'conditional_logic' => 0,
+				'wrapper' => array(
+					'width' => '',
+					'class' => '',
+					'id' => '',
+				),
+				'default_value' => '',
+				'placeholder' => '',
+				'prepend' => '',
+				'append' => '',
+			),
+		),
+		'location' => array(
+			array(
+				array(
+					'param' => 'post_type',
+					'operator' => '==',
+					'value' => 'claim',
+				),
+			),
+		),
+		'menu_order' => 0,
+		'position' => 'normal',
+		'style' => 'default',
+		'label_placement' => 'top',
+		'instruction_placement' => 'label',
+		'hide_on_screen' => '',
+		'active' => true,
+		'description' => '',
+	));
+	
+endif;
