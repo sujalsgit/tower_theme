@@ -671,3 +671,6 @@ function rest_pi_get_all_policies_callback( $request ) {
     }                  
     return $posts_data;                   
 }
+
+//Resolve CURL error to fetch API
+add_filter( 'https_ssl_verify', '__return_false' );
