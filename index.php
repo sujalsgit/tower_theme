@@ -49,6 +49,49 @@ if (!is_wp_error($response) && $response['response']['code'] == 200)
 <?php
 }
 ?>
+<?php
+$args = array(
+    'post_type' => 'claim'
+);
+
+$post_query = new WP_Query($args);
+
+if ($post_query->have_posts())
+{
+?>
+			<h2>Insurance Claim List</h2>
+			<p>Rendered via normal method</p>
+			<table class="table table-hover">
+			<thead>
+			  <tr>
+				<th>Name</th>
+				<th>Email</th>
+				<th>Policy ID</th>
+			  </tr>
+			</thead>
+			<tbody>
+<?php
+    while ($post_query->have_posts())
+    {
+        $post_query->the_post();
+        $claim_name = get_post_meta($post->ID, "name", true);
+        $claim_email = get_post_meta($post->ID, "email", true);
+        $policy_id = get_post_meta($post->ID, "policy_id", true);
+?>
+		<tr>
+			<td><?php echo $claim_name; ?></td>
+			<td><?php echo $claim_email; ?></td>
+			<td><?php echo $policy_id; ?></td>
+		</tr>
+<?php
+    }
+?>
+        </tbody>
+        </table>
+<?php
+}
+?>
+
 </main>
 
 <?php
