@@ -76,12 +76,12 @@ if ($post_query->have_posts())
         $post_query->the_post();
         $claim_name = get_post_meta($post->ID, "name", true);
         $claim_email = get_post_meta($post->ID, "email", true);
-        $policy_id = get_post_meta($post->ID, "policy_id", true);
+        $policy_id_claim = get_post_meta($post->ID, "policy_id_claim", true);
 ?>
 		<tr>
 			<td><?php echo $claim_name; ?></td>
 			<td><?php echo $claim_email; ?></td>
-			<td><?php echo $policy_id; ?></td>
+			<td><?php echo $policy_id_claim; ?></td>
 		</tr>
 <?php
     }

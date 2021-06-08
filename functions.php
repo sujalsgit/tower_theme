@@ -163,9 +163,11 @@ function Create_PostType_Claim() {
 }
 add_action( 'init', 'Create_PostType_Claim', 0 );
 
-// Register Custom Fields for Custom Post Type - Policy
+
 if( function_exists('acf_add_local_field_group') ):
 
+	// Register Custom Fields for Custom Post Type - Policy
+ 
 	acf_add_local_field_group(array(
 		'key' => 'group_policydetails',
 		'title' => 'Policy Details',
@@ -265,19 +267,18 @@ if( function_exists('acf_add_local_field_group') ):
 		'active' => true,
 		'description' => '',
 	));
-endif;
 
-// Register Custom Fields for Custom Post Type - Claim
-if( function_exists('acf_add_local_field_group') ):
+
+	// Register Custom Fields for Custom Post Type - Claim
 	
 	acf_add_local_field_group(array(
-		'key' => 'policy_claimdetails',
+		'key' => 'group_claimdetails',
 		'title' => 'Policy Claim Detail',
 		'fields' => array(
 			array(
-				'key' => 'policy_id',
+				'key' => 'policy_id_claim',
 				'label' => 'Policy ID',
-				'name' => 'policy_id',
+				'name' => 'policy_id_claim',
 				'type' => 'number',
 				'instructions' => '',
 				'required' => 1,
@@ -351,8 +352,10 @@ if( function_exists('acf_add_local_field_group') ):
 		'active' => true,
 		'description' => '',
 	));
-	
+
 endif;
+
+	
 
 
 //Listing Page - Columns for Custom Post Type - Policy
@@ -455,7 +458,7 @@ function render_claim_list( $column, $post_id ) {
 		case 'policy_id' :
 
   			/* Get the post meta. */
-			$policy_id = get_field('policy_id');
+			$policy_id = get_field('policy_id_claim');
 
   			/* If no policy_id is found, output a default message. */
   			if ( empty( $policy_id ) )
@@ -501,7 +504,7 @@ add_filter("manage_edit-claim_sortable_columns", "make_claim_list_sortable" );
 function make_claim_list_sortable( $columns )
 {
   $columns = array(
-		'policy_id' => __( 'Policy ID' ),
+		'policy_id_claim' => __( 'Policy ID' ),
 		'name' => __( 'Name' ),
 		'email' => __( 'Email' )
 	);
@@ -516,13 +519,14 @@ function validate_policyID($post_id, $post) {
 	if ($post->post_type != 'claim') return;
 
 	$post_type = 'policy';
-	$meta_key = 'policy_id';
+	$meta_key_policy = 'policy_id';
+	$meta_key_claim = 'policy_id_claim';
    
 	// look up the current policy_id for this claim post
-	$policy_id = get_post_meta($post_id, $meta_key, true);
+	$policy_id = get_post_meta($post_id, $meta_key_claim, true);
   
 	global $wpdb;
-	$query = 'select a.id from '.$wpdb->posts.' a inner join '.$wpdb->postmeta.' b on a.id = b.post_id where a.post_type = "'.$post_type.'" and b.meta_key = "'.$meta_key.'" and b.meta_value = "'.$policy_id.'" and a.id != '.$post_id.' limit 1';
+	$query = 'select a.id from '.$wpdb->posts.' a inner join '.$wpdb->postmeta.' b on a.id = b.post_id where a.post_type = "'.$post_type.'" and b.meta_key = "'.$meta_key_policy.'" and b.meta_value = "'.$policy_id.'" and a.id != '.$post_id.' limit 1';
    	$q = $wpdb->prepare($query);
 	$exists = $wpdb->get_var($q);
   
@@ -634,11 +638,11 @@ add_action( 'rest_api_init', 'create_rest_api_policies' );
 function create_rest_api_policies() {
     register_rest_route( 'v2', '/policies', array(
         'methods' => 'GET',
-        'callback' => 'rest_pi_get_all_policies_callback'
+        'callback' => 'rest_api_get_all_policies_callback'
     ));
 }
 
-function rest_pi_get_all_policies_callback( $request ) {
+function rest_api_get_all_policies_callback( $request ) {
     // Initialize the array that will receive the posts' data. 
     $posts_data = array();
 
@@ -652,6 +656,8 @@ function rest_pi_get_all_policies_callback( $request ) {
             'posts_per_page' => 10,            
             'post_type' => array( 'policy' ), // This is the line that allows to fetch multiple post types. 
 			'post_status'     => 'publish',
+            'orderby' => 'ID',
+            'order' => 'ASC',
         )
     ); 
 
@@ -662,7 +668,6 @@ function rest_pi_get_all_policies_callback( $request ) {
 
         $posts_data[] = (object) array( 
             'id' => $id, 
-            'url' => get_permalink($id),
             'title' => get_post_meta($id, 'policy_name', true),
 			'policy_id' => get_post_meta($id, 'policy_id', true),
 			'live_date' => get_post_meta($id, 'live_date', true),
