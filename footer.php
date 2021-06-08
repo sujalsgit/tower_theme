@@ -8,7 +8,7 @@
 
 </div>
 
-<footer class="site-footer">tower by Sujal Shah.</footer>
+<footer class="site-footer">Tower Theme - Developed by <a href="https://sujalshah.com">Sujal Shah</a>.</footer>
 
 <?php wp_footer(); ?>
 

@@ -7,7 +7,7 @@ get_header();
 ?>
 
 <main id="main" class="site-main" role="main">
-
+<h1>Welcome!</h1>
 <?php
 $response = wp_remote_get(add_query_arg(array(
     'per_page' => 10
