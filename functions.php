@@ -536,3 +536,93 @@ function validate_policyID($post_id, $post) {
 			  exit;
 	}
   }
+
+  //Function to display admin notification
+  function my_notification() {
+	$notifications = get_option('my_notifications');
+
+	if (!empty($notifications)) {
+		$notifications = json_decode($notifications);
+		#notifications[0] = (string) Type of notification: error, updated or update-nag
+		#notifications[1] = (string) Message
+		#notifications[2] = (boolean) is_dismissible?
+		switch ($notifications[0]) {
+			case 'error': # red
+			case 'updated': # green
+			case 'update-nag': # ?
+				$class = $notifications[0];
+				break;
+			default:
+				# Defaults to error just in case
+				$class = 'error';
+				break;
+		}
+
+		$is_dismissable = '';
+		if (isset($notifications[2]) && $notifications[2] == true)
+			$is_dismissable = 'is_dismissable';
+
+		echo '<div class="'.$class.' notice '.$is_dismissable.'">';
+		echo '<p>'.$notifications[1].'</p>';
+		echo '</div>';
+
+		#Reset the notification
+		update_option('my_notifications', false);
+	}
+}
+add_action( 'admin_notices', 'my_notification' );
+
+
+//set title from custom post
+function autogenerate_title_from_customfields( $post_id, $post ){
+       
+	if ( 'policy' == $post->post_type ) {
+		$policy_name = get_post_meta( $post_id, 'policy_name', true );
+		$new_title = sanitize_text_field( $policy_name );
+		$new_slug = sanitize_title( $policy_name );
+			
+		$args = array(
+		'ID'          =>   $post_id,
+		'post_title'  =>   $new_title,
+		'post_name'   =>   $new_slug
+		);
+	
+		// unhook this function so it doesn't loop infinitely
+		 remove_action('save_post', 'autogenerate_title_from_customfields',30,2);
+  
+		 // update the post, which calls save_post again
+		 wp_update_post( $args );
+  
+		 // re-hook this function
+		 add_action('save_post', 'autogenerate_title_from_customfields',30,2); 
+   	} 
+   
+	if ( 'claim' == $post->post_type ) {
+		$name = get_post_meta( $post_id, 'name', true );
+		$new_title = sanitize_text_field( $name );
+		$new_slug = sanitize_title( $name );
+			
+		$args = array(
+		'ID'          =>   $post_id,
+		'post_title'  =>   $new_title,
+		'post_name'   =>   $new_slug
+		);
+  
+		// unhook this function so it doesn't loop infinitely
+		 remove_action('save_post', 'autogenerate_title_from_customfields',30,2);
+  
+		 // update the post, which calls save_post again
+		 wp_update_post( $args );
+  
+		 // re-hook this function
+		 add_action('save_post', 'autogenerate_title_from_customfields',30,2); 
+    } 
+ }
+ add_action( 'save_post', 'autogenerate_title_from_customfields', 30, 2 );
+
+//remove autosave functionality as sometimes it saves title as draft
+function disable_autosave() {
+	wp_deregister_script('autosave');
+  }
+  add_action('wp_print_scripts','disable_autosave' );
+  remove_action('pre_post_update','wp_save_post_revision' );
