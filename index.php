@@ -43,7 +43,7 @@ if (!is_wp_error($response) && $response['response']['code'] == 200) { ?>
 	<tbody>
 <?php
 $remote_posts = json_decode($response['body']);
-foreach ($remote_posts as $remote_post) {<?php
+foreach ($remote_posts as $remote_post) {
     //print_r( $remote_post );
     ?>
 	<tr>
