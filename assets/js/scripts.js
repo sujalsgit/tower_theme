@@ -11,8 +11,6 @@ async function getapi(url) {
 	// Storing data in form of JSON
 	var data = await response.json();
 	console.log(data);
-	//var policydata = JSON.parse(JSON.stringify(data));
-    //console.log(policydata);
 
 	//console.log(data);
 	if (response) {
@@ -32,9 +30,9 @@ function show(data) {
 	let tab =
 		`<tr>
 		<th>Policy ID</th>
-        <th>Policy Name</th>
-        <th>Live Date</th>
-        <th>Description</th>
+        	<th>Policy Name</th>
+		<th>Live Date</th>
+        	<th>Description</th>
 		</tr>`;
 	
 	// Loop to access all rows
